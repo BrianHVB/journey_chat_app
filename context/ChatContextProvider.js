@@ -71,6 +71,15 @@ export default function ChatContextProvider(props) {
     })
   }
 
+  function processMessage(content) {
+    if (content.startsWith('/')) {
+      processCommand(content.substr(1));
+    }
+    else {
+      emitChatMessage(content)
+    }
+  }
+
   function emitChatMessage(content) {
     const payload = {
       name: name,
@@ -80,16 +89,36 @@ export default function ChatContextProvider(props) {
     socket.emit('client.chat.message', payload)
   }
 
-  function joinRoom(room) {
-    const payload = {name, room};
-    socket.emit('client.room.join', payload);
+  async function joinRoom(room) {
+    const cookieResp = await fetch('/api/auth/getCookies');
+    const cookies = await cookieResp.json();
+    const token = cookies['next-auth.session-token'];
+
+    const payload = {name, room, token};
+    socket.emit('client.room.join', payload, (result) => {
+      console.log('join room callback result', result);
+      if (result) {
+        messages[room] == null && setMessages(prevVal => ({...prevVal, [room]: []}));
+        setCurrentRoom(room);
+      }
+    });
+  }
+
+  function processCommand(command) {
+    const [cmd, ...cmdArgs] = command.split(' ');
+    console.log('processCommand', cmd, cmdArgs)
+    switch(cmd) {
+      case 'join':
+        const [room] = cmdArgs
+        room && joinRoom(room);
+    }
   }
 
 
   const contextValue = {
     messages: messages,
     currentRoom: currentRoom,
-    emitMessage: emitChatMessage,
+    sendMessage: processMessage,
   }
 
 

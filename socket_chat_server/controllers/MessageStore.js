@@ -1,5 +1,4 @@
 
-
 class MessageStore {
   constructor(options = {}) {
     const {messageLimit = 100} = options;

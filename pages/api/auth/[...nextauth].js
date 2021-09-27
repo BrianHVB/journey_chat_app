@@ -3,7 +3,6 @@ import Providers from "next-auth/providers";
 
 
 export default NextAuth({
-
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
@@ -11,6 +10,11 @@ export default NextAuth({
     }),
   ],
 
+  secret: process.env['JWT_SECRET'],
+
+  jwt: {
+    secret: process.env['JWT_SECRET'],
+  },
 
   callbacks: {
     session: async (session, user) => {

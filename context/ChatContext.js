@@ -7,7 +7,7 @@ const ChatContext = React.createContext({
 
   currentRoom: 'public',
   setCurrentRoom: (room) => {},
-  emitMessage: (message) => {},
+  sendMessage: (message) => {},
 })
 
 export default ChatContext;

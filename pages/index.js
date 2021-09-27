@@ -3,6 +3,8 @@ import {useEffect, useContext, useRef} from "react";
 import styled from 'styled-components';
 
 import ChatContext from '../context/ChatContext';
+import {AutoScroller} from "../components/AutoScroller";
+import Message from "../components/Message";
 
 export default function App() {
   const [session, loading] = useSession();
@@ -11,9 +13,6 @@ export default function App() {
 
   const chatInputRef = useRef(null);
 
-  useEffect(function logMessageChange() {
-    console.log('messages change', context.messages);
-  }, [context])
 
   function handleSignIn() {
     signIn('google', {callbackUrl: 'http://localhost/'})
@@ -25,7 +24,7 @@ export default function App() {
 
   function handleChatSubmit() {
     const content = chatInputRef.current.value;
-    context.emitMessage(content);
+    context.sendMessage(content);
     chatInputRef.current.value = '';
   }
 
@@ -56,99 +55,119 @@ export default function App() {
       return <Message key={msg.id} name={msg.name} content={msg.content}/>
     })
 
-  console.log('displayMessages', {messages: context.messages, currentRoom: context.currentRoom, displayMessages})
-
   return (
+    <Body>
 
-    <SBody>
-      <SSession>
-        {loading && <p>Loading...</p>}
-        {session && signOutPrompt}
-        {!session && signInPrompt}
-      </SSession>
+      <Header>
+        <Session>
+          {loading && <p>Loading...</p>}
+          {session && signOutPrompt}
+          {!session && signInPrompt}
+        </Session>
+        <Room>
+          <span className={'label'}>Room: <span className={'name'}>{context.currentRoom}</span></span>
+        </Room>
+      </Header>
 
-      <SMessages>
-        {displayMessages}
-      </SMessages>
+      <MessagesContainer>
+        <AutoScroller tolerance={25} alwaysScroll={false}>
+          <Messages>
+            {displayMessages}
+          </Messages>
+        </AutoScroller>
+      </MessagesContainer>
 
-      <SChatInputContainer>
-        <SChatInput ref={chatInputRef} onKeyPress={handleInputKeyPress}/>
-        <SChatSubmitButton onClick={handleChatSubmit}>
+
+      <ChatInputContainer>
+        <ChatInput ref={chatInputRef} onKeyPress={handleInputKeyPress}/>
+        <ChatSubmitButton onClick={handleChatSubmit}>
           send
-        </SChatSubmitButton>
-      </SChatInputContainer>
-    </SBody>
+        </ChatSubmitButton>
+      </ChatInputContainer>
 
+    </Body>
   )
 }
 
-function Message(props) {
-  const {name, content} = props;
-
-  return (
-    <SMessageContainer>
-      <SMessageName>{name}</SMessageName>
-      <SMessageContent>{content}</SMessageContent>
-    </SMessageContainer>
-  )
-}
-
-const SSession = styled.div`
-  background-color: lightgrey;
-  width: 500px;
-  margin-bottom: 10px;
-  padding: 5px;
-`
-
-const SMessages = styled.div`
-  width: 500px;
-  height: 80vh;
-  border: 1px solid white;
-  background-color: black;
-`
-
-const SMessageContainer = styled.div`
-  display: block;  
-`
-
-const SMessageName = styled.span`
-  display: inline;
-  color: lightblue;
-`
-
-const SMessageContent = styled.span`
-  color: #39FF14;
-  padding-left: 10px;
-`
-
-const SBody = styled.div`
+const Body = styled.div`
   margin: 20px 10px;
   padding: 20px 10px;
-`
+`;
 
-const SChatInputContainer = styled.div`
-  width: 500px;
-  height: 30px;
-  margin-top: 5px;
+
+const Header = styled.div`
+  height: auto;
+  width: 100%;
+  display: grid;
+  background-color: lightgrey;
+  margin-bottom: 10px;
+  padding: 5px;
+  grid-template-columns: 250px 1fr;
+  grid-template-areas: 'session room';
+`;
+
+const Session = styled.span`
+  grid-area: session;
+  justify-self: center;
+`;
+
+const Room = styled.span`
+  grid-area: room;
+  justify-self: center;
+  align-self: center;
+  font-size: 16pt;
   
-`
+  .label {
+    color: darkBlue
+  }
+  
+  .name{
+    color: darkRed;
+  }
+`;
 
-const SChatInput = styled.input`
-  width: 400px;
+
+const MessagesContainer = styled.div`
+  height: 40em;
+  overflow: auto;
+  border: 1px solid gray;
+  padding: 5px;
+  background-color: black
+`;
+
+const Messages = styled.pre`
+  font-family: 'Source Code Pro', Monaco, monospace;
+  line-height: 1.4em;
+  color: lightcyan;
+  background-color: black;
+  overflow-x: visible;
+  scrollbar-width: none;
+  padding-left: 10px;
+`;
+
+
+const ChatInputContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 75px;
+  grid-column-gap: 10px;
+  width: 100%;
+  height: 40px;
+  margin-top: 5px;
+`;
+
+const ChatInput = styled.input`
   height: 100%;
   float: left;
   background-color: darkblue;
   color: bisque;
   font-size: 14pt;
   padding: 0 5px;
-  
-`
+`;
 
-const SChatSubmitButton = styled.button`
-  width: 75px;
+const ChatSubmitButton = styled.button`
   height: 100%;
   float: right;
   background-color: darkblue;
   color: white;
   font-size: 14pt;
-`
+`;
