@@ -79,7 +79,11 @@ export default function App() {
 
 
       <ChatInputContainer>
-        <ChatInput ref={chatInputRef} onKeyPress={handleInputKeyPress}/>
+        <ChatInput
+          ref={chatInputRef}
+          onKeyPress={handleInputKeyPress}
+          placeholder={'Enter message or use /join [room] to change rooms'}
+        />
         <ChatSubmitButton onClick={handleChatSubmit}>
           send
         </ChatSubmitButton>
