@@ -1,26 +1,42 @@
 import styled from "styled-components";
 
 export default function Message(props) {
-  const {name, content} = props;
+  const {name, content, type = 'chat'} = props;
+
+  const messageContent = type === 'status'
+    ? (
+        <StatusMessageContent>{content}</StatusMessageContent>
+      )
+    : (
+        <>
+          <MessageName>{name}</MessageName>
+          <ChatMessageContent>{content}</ChatMessageContent>
+        </>
+      )
 
   return (
-    <SMessageContainer>
-      <SMessageName>{name}</SMessageName>
-      <SMessageContent>{content}</SMessageContent>
-    </SMessageContainer>
+    <MessageContainer>
+      {messageContent}
+    </MessageContainer>
   )
 }
 
-const SMessageContainer = styled.div`
+const MessageContainer = styled.div`
   display: block;  
 `;
 
-const SMessageName = styled.span`
+const MessageName = styled.span`
   display: inline;
   color: lightblue;
 `;
 
-const SMessageContent = styled.span`
+const ChatMessageContent = styled.span`
   color: #39FF14;
   padding-left: 10px;
+`;
+
+const StatusMessageContent = styled.span`
+  color: palegoldenrod;
+  font-style: italic;
+  
 `;

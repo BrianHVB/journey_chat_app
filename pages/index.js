@@ -52,7 +52,7 @@ export default function App() {
   const displayMessages = context
     .messages[context.currentRoom]
     .map(msg => {
-      return <Message key={msg.id} name={msg.name} content={msg.content}/>
+      return <Message key={msg.id} name={msg.name} content={msg.content} type={msg.type}/>
     })
 
   return (

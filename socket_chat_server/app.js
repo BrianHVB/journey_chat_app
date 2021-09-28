@@ -68,6 +68,7 @@ function broadcastToRoom(data, socket) {
       name,
       room,
       content,
+      type: 'chat',
       id: Date.now()
     })
 
@@ -75,7 +76,11 @@ function broadcastToRoom(data, socket) {
 }
 
 function emitStatusMessageToSocket(data, socket) {
-  socket.emit('server.status.message', data);
+  socket.emit('server.status.message', {
+    ...data,
+    type: 'status',
+    id: Date.now(),
+  });
 }
 
 

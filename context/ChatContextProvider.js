@@ -54,8 +54,6 @@ export default function ChatContextProvider(props) {
     })
 
     socket.on('server.chat.message', payload => {
-      console.log('server.chat.message', payload);
-
       const {room, name, content} = payload;
 
       setMessages(prevVal => {
@@ -69,6 +67,17 @@ export default function ChatContextProvider(props) {
         return newMessages;
       })
     })
+
+    socket.on('server.status.message', payload => {
+      setMessages(prevVal => {
+        const existingMessages = prevVal[currentRoom] || [];
+        const newMessages = [...existingMessages, payload];
+        return {
+          ...prevVal,
+          [currentRoom]: newMessages
+        }
+      })
+    });
 
     socket.on('server.room.history', data => {
       const {room, messages} = data;
