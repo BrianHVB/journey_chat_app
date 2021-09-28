@@ -3,7 +3,7 @@ const htmlToText = require('html-to-text');
 
 class SessionManager {
   constructor() {
-    this.authEndpoint = 'http://localhost/api/auth/getJwt'
+    this.authEndpoint = 'http://localhost:3000/api/auth/getJwt'
     this.jwt = null;
     this.isAuthenticated = false;
   }
@@ -26,7 +26,7 @@ class SessionManager {
     }
     catch(err) {
       const respData = err?.response?.data;
-      const errorMsg = `${err.message} - ${respData.errorMessage || (respData && JSON.stringify(respData)) || 'unknown'}`
+      const errorMsg = `${err.message} - ${respData?.errorMessage || (respData && JSON.stringify(respData)) || 'unknown'}`
       console.error(errorMsg);
     }
 

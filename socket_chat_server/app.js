@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const { Server: SocketServer } = require('socket.io');
 const io = new SocketServer(server, {
   cors: {
-    origin: ["http://localhost:80", "http://localhost"],
+    origin: ["http://localhost:3000", "http://localhost", "http://localhost:80"],
     methods: ["GET", "POST"]
   }
 });
