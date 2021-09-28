@@ -8,7 +8,15 @@ const server = http.createServer(app);
 const { Server: SocketServer } = require('socket.io');
 const io = new SocketServer(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost", "http://localhost:80"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost",
+      "http://localhost:80",
+      "http://52.35.205.120:3000/",
+      "https://52.35.205.120:3000/",
+      "http://www.zek.dev",
+      "https://www.zek.dev"
+    ],
     methods: ["GET", "POST"]
   }
 });
