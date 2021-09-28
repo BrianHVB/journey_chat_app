@@ -3,7 +3,8 @@ import { io } from 'socket.io-client';
 import ChatContext from "./ChatContext";
 import {useSession} from "next-auth/client";
 
-const socket = io('http://localhost:4000', {
+
+const socket = io(null, {
   closeOnBeforeunload: true,
   autoConnect: false,
 })
@@ -37,7 +38,14 @@ export default function ChatContextProvider(props) {
 
   useEffect(function connectSocket() {
     registerHandlers();
-    socket.connect();
+    fetch('/api/getSocketServer')
+      .then(res => res.text())
+      .then(wsHost => {
+        socket.io.uri = wsHost;
+        if (!socket.connected) {
+          socket.connect()
+        }
+      })
   }, [])
 
   function registerHandlers() {

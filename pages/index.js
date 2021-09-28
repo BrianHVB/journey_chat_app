@@ -15,7 +15,7 @@ export default function App() {
 
 
   function handleSignIn() {
-    signIn('google', {callbackUrl: 'http://localhost/'})
+    signIn('google', {callbackUrl: process.env['SELF_HOST']})
   }
 
   function handleSignOut() {

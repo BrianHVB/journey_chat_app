@@ -1,9 +1,9 @@
 const axios = require('axios');
-const htmlToText = require('html-to-text');
+
 
 class SessionManager {
   constructor() {
-    this.authEndpoint = 'http://localhost:3000/api/auth/getJwt'
+    this.authEndpoint = process.env['AUTH_ENDPOINT']
     this.jwt = null;
     this.isAuthenticated = false;
   }

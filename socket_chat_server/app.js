@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const messageStore = require('./controllers/MessageStore');
@@ -102,9 +103,6 @@ async function canJoinRoom(room, token) {
   }
 
 }
-
-
-
 
 server.listen(4000, () => {
   console.log('SocketIO server listening on 4000')
